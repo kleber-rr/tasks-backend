@@ -42,6 +42,15 @@ pipeline {
                 }
             }
         }
+        stage('Deploy Frontend') {
+            dir('frontend') {
+                steps {
+                    git credentialsId: 'github_login', url: 'https://github.com/kleber-rr/tasks-frontend.git'
+                    bat 'mvn clean package'
+                    deploy adapters: [tomcat8(credentialsId: 'tomcat_login', path: '', url: 'http://localhost:8001')], contextPath: 'tasks', war: 'target/tasks.war'
+                }
+            }
+        }
     }
 }
 
